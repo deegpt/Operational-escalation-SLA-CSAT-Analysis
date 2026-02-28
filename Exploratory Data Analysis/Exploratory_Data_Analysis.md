@@ -90,3 +90,113 @@ Low CSAT and high severity values represent **valid but infrequent adverse outco
 No outliers were removed. These values are explicitly analyzed in relation to SLA breaches and escalations.
 
 ---
+
+### Categorical Distribution Analysis (Countplots)
+
+Countplots were used to examine the distribution of key categorical variables in order to understand ticket volume composition, customer mix, and the nature of issues handled by support operations. These plots are descriptive in nature and are intended to guide subsequent comparative and rate-based analyses.
+
+##### Issue Category
+
+**Variables**: Cards, Payments, Accounts, Compliance, Credit
+
+*Observations:**
+- Ticket volume is distributed across multiple issue categories.
+- Cards and Payments represent the highest number of tickets.
+- Accounts, Compliance, and Credit show comparable volumes with no extreme imbalance.
+
+**Interpretation:**
+Support demand is broad-based rather than concentrated, indicating that operational load spans transactional, account-related, and regulatory domains. High volumes in Cards and Payments suggest high-frequency customer interactions, while sustained volume in Compliance and Credit points to ongoing complexity in regulated financial processes.
+
+#### Country
+
+**Variables:** DE, ES, IT, UK, FR
+
+**Observations:**
+- Ticket counts are relatively balanced across countries.
+- Minor differences exist (e.g., DE and ES slightly higher; FR slightly lower), but no country dominates volume.
+
+**Interpretation:**
+Geographic distribution of tickets appears stable, enabling fair cross-country comparisons for SLA compliance, escalation rates, and CSAT without strong volume bias. Any performance differences observed later are more likely attributable to process or policy differences rather than demand skew.
+
+#### Customer Segment
+
+**Variables:** Standard, Plus, Premium, Metal, Ultra
+
+**Observations:**
+
+- Standard customers account for the majority of tickets.
+- Plus customers form a secondary cluster.
+- Premium, Metal, and Ultra segments represent a smaller proportion of total volume.
+
+**Interpretation:**
+Ticket volume is **inversely related to customer plan tier**. While higher-tier customers generate fewer tickets, they may carry higher expectations and stricter SLA sensitivity. Consequently, raw counts should not be used for performance comparison across segments; normalized rates are required.
+
+#### Reason Category
+
+> **Examples:** Credit, Merchant Dispute, Insurance, RevPoints, Chargeback, Account Restriction, etc.
+
+**Observations:**
+
+- Credit-related reasons are the most frequent.
+- Disputes, insurance, and rewards form the next most common group.
+- A long tail of moderately frequent reasons exists.
+
+**Interpretation:**
+Credit and dispute-driven issues constitute a significant portion of support demand and are likely to involve higher complexity. These categories are strong candidates for deeper analysis related to escalation likelihood, resolution time, SLA breaches, and CSAT impact.
+
+---
+
+### Correlation Analysis (Heatmap)
+
+A Pearson correlation heatmap was used to assess linear relationships between numerical and binary variables related to resolution time, escalation behavior, SLA compliance, severity, and customer satisfaction.
+
+#### Strong Positive Correlations
+`resolution_time_mins` ↔ `actual_resolution_mins` ↔ `resolution_time_hours` **Correlation ≈ 1.00**
+
+**Resolution Time Metrics**
+
+- resolution_time_mins, actual_resolution_mins, and resolution_time_hours show near-perfect positive correlation.
+- These variables represent equivalent measures in different units.
+
+**Interpretation:**
+Only one resolution time variable should be retained for modeling or reporting to avoid redundancy.
+
+**SLA Risk and SLA Breach** 
+
+sla_risk_flag and sla_breached_flag exhibit a strong positive correlation (~0.8).
+
+**Interpretation**:
+The SLA risk indicator is a strong leading signal of actual SLA breach, validating the risk-flagging logic.
+
+**Severity and Operational Outcomes**
+`sla_breached_flag` ↔ `actual_resolution_mins` **Correlation ≈ 0.64**
+`severity_score` ↔ `escalation_flag` **Correlation ≈ 0.63**
+`severity_score` ↔ `sla_breached_flag` **Correlation ≈ 0.72**
+
+- Longer resolution times strongly increase SLA breach probability. This confirms, SLA breach is primarily time-driven.
+- severity_score shows strong positive correlation with:
+    - sla_breached_flag
+    - escalation_flag
+    - resolution time metrics
+
+**Interpretation:**
+Higher severity tickets are more complex, take longer to resolve, and are more likely to escalate and breach SLA. This establishes severity as a primary upstream driver of operational strain.
+
+#### Strong Negative Correlations 
+
+**CSAT vs Resolution Time**
+`csat_score` ↔ `resolution_time_mins` **Correlation ≈ –0.42**
+
+csat_score is moderately to strongly negatively correlated with resolution time metrics.
+
+**Interpretation:**
+Longer resolution times are associated with lower customer satisfaction, indicating speed as a key CSAT driver.
+
+**CSAT vs SLA Breach and Repeat Contact**
+`csat_score` ↔ `sla_breached_flag` **Correlation ≈ –0.24 to –0.27**
+CSAT shows negative correlation with sla_breached_flag because some customers can still tolerate breaches, though, expectations vary by segment.
+
+`csat_score` ↔ `repeat_contact_flag` **Correlation ≈ –0.36**
+
+**Interpretation:**
+Customers are less satisfied when SLAs are breached or when multiple contacts are required, highlighting both timeliness and resolution quality as determinants of experience.
