@@ -4,6 +4,8 @@
 
 The objective of the exploratory data analysis is to understand the distributional characteristics, variability, and potential anomalies in ticket resolution performance, escalation behavior, SLA compliance, and customer satisfaction. Particular attention is given to identifying whether extreme values represent data quality issues or genuine operational behavior.
 
+---
+
 ### Distribution and Variability Analysis
 
 #### Resolution Time Metrics
@@ -87,4 +89,4 @@ Low CSAT and high severity values represent **valid but infrequent adverse outco
 **Treatment Decision:**
 No outliers were removed. These values are explicitly analyzed in relation to SLA breaches and escalations.
 
-
+---
