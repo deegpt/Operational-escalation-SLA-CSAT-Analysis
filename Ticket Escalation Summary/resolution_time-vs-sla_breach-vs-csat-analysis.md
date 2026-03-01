@@ -2,7 +2,9 @@
 
 ### 1. Which issue categories disproportionately drive escalations?
 
+
 ![escalation_rate by issue_category](docs/escalation_rate_by_issue_category.png)
+
 
 > This concludes:
 - Accounts-related issues have the highest escalation propensity, indicating frequent need for higher-level intervention.
