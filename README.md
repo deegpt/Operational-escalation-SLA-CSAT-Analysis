@@ -1,6 +1,6 @@
 # Operational-escalation-SLA-CSAT-Analysis
 
-🚀 ### Project Overview
+### 🚀 Project Overview
 
 This project simulates a real-world fintech support operations environment, focusing on:
 
@@ -19,7 +19,7 @@ The goal is to demonstrate end-to-end analytics capability, including:
 
 ---
 
-🧩 ### Dataset Description
+### 🧩 Dataset Description
 
 The project uses a relational dataset consisting of 5 tables:
 
@@ -46,7 +46,7 @@ The project uses a relational dataset consisting of 5 tables:
 
 ---
 
-🧱 ### Data Model (Star Schema)
+### 🧱 Data Model (Star Schema)
 
 customers        agents        escalation_reasons
      │              │                 │
@@ -58,7 +58,7 @@ customers        agents        escalation_reasons
 
 ---
 
-🛠️ ### Tools & Technologies
+### 🛠️ Tools & Technologies
 - SQL Server — Data modeling, joins, window functions
 - Python (Pandas, Matplotlib) — EDA & statistical validation
 - Jupyter Notebook — Analysis workflow
@@ -66,7 +66,7 @@ customers        agents        escalation_reasons
 
 ---
 
-🔍 ### Key Analysis Areas
+### 🔍 Key Analysis Areas
 
 1️⃣ Escalation Drivers
 - Identified issue categories with highest escalation rates
@@ -88,14 +88,18 @@ customers        agents        escalation_reasons
 - Identified drivers of repeat customer contacts
 - Strong link to poor resolution quality
 
-📈 ### Temporal & Trend Analysis
+---
+
+### 📈 Temporal & Trend Analysis
 
 - Weekly ticket volume trends
 - Escalation rate trends
 - Rolling averages for noise reduction
 - Control charts to detect abnormal process behavior
 
-🧠 ### Key Insights
+---
+
+### 🧠 Key Insights
 
 - Escalations are concentrated in Payments & Compliance issues
 - Resolution time is a strong driver of CSAT decline
@@ -103,7 +107,9 @@ customers        agents        escalation_reasons
 - Repeat contacts indicate ineffective first resolution
 - Certain issue categories consistently underperform
 
-💡 ### Business Recommendations
+---
+
+### 💡 Business Recommendations
 
 - Increase L2 support for high-risk issue categories
 - Introduce proactive monitoring for SLA breach risk
@@ -111,7 +117,9 @@ customers        agents        escalation_reasons
 - Improve first-contact resolution processes
 - Track rolling escalation rates as early warning signals
 
-⚙️ ### Data Engineering Highlights
+---
+
+### ⚙️ Data Engineering Highlights
 
 - Designed relational schema with fact & dimension tables
 - Implemented clean, SQL Server–compatible datasets
@@ -121,21 +129,25 @@ Ensured:
 - No duplicate primary keys
 - Built staging → clean load pipeline logic
 
-📌 ### Example SQL Capabilities Demonstrated
+### 📌 Example SQL Capabilities Demonstrated
 
 - Aggregations & joins
 - Window functions (RANK, LAG, rolling averages)
 - SLA calculations
 - Behavioral analysis queries
 
-📌 ### Example SQL Capabilities Demonstrated
+---
+
+### 📌 Example SQL Capabilities Demonstrated
 
 - Aggregations & joins
 - Window functions (RANK, LAG, rolling averages)
 - SLA calculations
 - Behavioral analysis queries
 
-📊 ### Example Python Capabilities Demonstrated
+---
+
+### 📊 Example Python Capabilities Demonstrated
 
 - Data cleaning & validation
 - Feature engineering
@@ -143,7 +155,9 @@ Ensured:
 - Statistical testing
 - Visualization (line plots, heatmaps, distributions)
 
-📁 ### Project Structure
+---
+
+### 📁 Project Structure
 
 operations-sla-analytics/
 │
@@ -167,7 +181,9 @@ operations-sla-analytics/
 │
 └── README.md
 
-🎯 ### What This Project Demonstrates
+---
+
+### 🎯 What This Project Demonstrates
 
 - Strong SQL fundamentals beyond basic queries
 - Ability to translate business problems into analysis
@@ -175,14 +191,18 @@ operations-sla-analytics/
 - Data cleaning and validation in real-world scenarios
 - Structured, end-to-end analytics thinking
 
-📌 ### Future Enhancements
+--- 
+
+### 📌 Future Enhancements
 
 - Predict SLA breaches using machine learning
 - Real-time dashboard integration
 - Agent-level performance scoring model
 - Customer churn prediction based on support experience
 
-⭐ ### Final Note
+---
+
+### ⭐ Final Note
 
 This project reflects a realistic business analytics workflow, combining:
 
