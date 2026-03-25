@@ -48,7 +48,7 @@ The project uses a relational dataset consisting of 5 tables:
 
 ### 🧱 Data Model (Star Schema)
 
-
+```
 customers        agents        escalation_reasons
      │              │                 │
      └──────┬───────┴───────┬─────────┘
@@ -56,7 +56,7 @@ customers        agents        escalation_reasons
          tickets (FACT) ────┘
             │
         sla_logs
-
+```
 ---
 
 ### 🛠️ Tools & Technologies
@@ -160,7 +160,7 @@ Ensured:
 
 ### 📁 Project Structure
 
-
+```
 operations-sla-analytics/
 │
 ├── data/
@@ -182,7 +182,7 @@ operations-sla-analytics/
 │   └── dashboard.pbix
 │
 └── README.md
-
+```
 
 ---
 
