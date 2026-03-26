@@ -1,216 +1,131 @@
-# Operational-escalation-SLA-CSAT-Analysis
+# 📊 Operational Escalation, SLA & CSAT Analysis
 
-### 🚀 Project Overview
+> **Domain:** FinTech Customer Support Operations | **Stack:** Python · SQL · SQLite · Pandas · Seaborn · Matplotlib · SciPy
 
-This project simulates a real-world fintech support operations environment, focusing on:
-
-- Ticket lifecycle analysis
-- Escalation drivers
-- SLA performance
-- Customer satisfaction (CSAT)
-- Operational efficiency
-
-The goal is to demonstrate end-to-end analytics capability, including:
-
-- Data modeling
-- SQL-based analysis
-- Python EDA
-- Business insights & recommendations
+A end-to-end data analysis project that explores **1,200 support tickets** from a simulated FinTech (Revolut-style) operations environment. The project identifies key drivers of **escalations**, **SLA breaches**, **repeat contacts**, and **customer satisfaction (CSAT)**, delivering actionable insights for process improvement, staffing optimisation, and workflow redesign.
 
 ---
 
-### 🧩 Dataset Description
-
-The project uses a relational dataset consisting of 5 tables:
-
-1. `tickets` (Fact Table)
-- Core operational data (~1200 records)
-- Contains ticket lifecycle, resolution, and customer experience metrics
-
-3. `customers`
-- ~500 customers
-- Includes customer segments:
-    - Standard, Plus, Premium, Metal, Ultra
-      
-4. `agents`
-- ~100 support agents
-- Includes tier, region, and experience
-  
-5. `escalation_reasons`
-- 15 categorized escalation drivers
-- Represents real fintech scenarios
-  
-6. `sla_logs`
-- SLA targets vs actual resolution times
-- SLA breach indicators
-
----
-
-### 🧱 Data Model (Star Schema)
+## 🗂️ Project Structure
 
 ```
-customers        agents        escalation_reasons
-     │              │                 │
-     └──────┬───────┴───────┬─────────┘
-            │               │
-         tickets (FACT) ────┘
-            │
-        sla_logs
-```
----
-
-### 🛠️ Tools & Technologies
-- SQL Server — Data modeling, joins, window functions
-- Python (Pandas, Matplotlib) — EDA & statistical validation
-- Jupyter Notebook — Analysis workflow
-- Power BI (optional) — Dashboarding
-
----
-
-### 🔍 Key Analysis Areas
-
-1️⃣ Escalation Drivers
-- Identified issue categories with highest escalation rates
-- Used aggregation + statistical validation (Chi-square)
-  
-2️⃣ Resolution Time vs CSAT
-- Longer resolution times significantly reduce CSAT
-- Validated using Spearman correlation
-  
-3️⃣ SLA Performance
-- SLA breach patterns across issue categories
-- Identified operational bottlenecks
-  
-4️⃣ Agent Performance
-- Compared L1 vs L2 performance
-- Measured impact on resolution time and escalations
-  
-5️⃣ Repeat Contact Analysis
-- Identified drivers of repeat customer contacts
-- Strong link to poor resolution quality
-
----
-
-### 📈 Temporal & Trend Analysis
-
-- Weekly ticket volume trends
-- Escalation rate trends
-- Rolling averages for noise reduction
-- Control charts to detect abnormal process behavior
-
----
-
-### 🧠 Key Insights
-
-- Escalations are concentrated in Payments & Compliance issues
-- Resolution time is a strong driver of CSAT decline
-- SLA breaches increase during high workload periods
-- Repeat contacts indicate ineffective first resolution
-- Certain issue categories consistently underperform
-
----
-
-### 💡 Business Recommendations
-
-- Increase L2 support for high-risk issue categories
-- Introduce proactive monitoring for SLA breach risk
-- Optimize staffing during peak demand periods
-- Improve first-contact resolution processes
-- Track rolling escalation rates as early warning signals
-
----
-
-### ⚙️ Data Engineering Highlights
-
-- Designed relational schema with fact & dimension tables
-- Implemented clean, SQL Server–compatible datasets
-Ensured:
-- Consistent datetime formats
-- Referential integrity
-- No duplicate primary keys
-- Built staging → clean load pipeline logic
-
-### 📌 Example SQL Capabilities Demonstrated
-
-- Aggregations & joins
-- Window functions (RANK, LAG, rolling averages)
-- SLA calculations
-- Behavioral analysis queries
-
----
-
-### 📌 Example SQL Capabilities Demonstrated
-
-- Aggregations & joins
-- Window functions (RANK, LAG, rolling averages)
-- SLA calculations
-- Behavioral analysis queries
-
----
-
-### 📊 Example Python Capabilities Demonstrated
-
-- Data cleaning & validation
-- Feature engineering
-- Correlation analysis
-- Statistical testing
-- Visualization (line plots, heatmaps, distributions)
-
----
-
-### 📁 Project Structure
-
-```
-operations-sla-analytics/
+Operational-escalation-SLA-CSAT-Analysis/
 │
-├── data/
-│   ├── agents.csv
-│   ├── customers.csv
-│   ├── escalation_reasons.csv
-│   ├── tickets.csv
-│   └── sla_logs.csv
+├── Data Ingestion/                    # Database schema creation & synthetic data generation
+│   └── ...                            
 │
-├── sql/
-│   ├── schema.sql
-│   ├── analysis_queries.sql
+├── Exploratory Data Analysis/         # Full EDA notebook — trends, patterns, correlations
+│   ├── Exploratory-Data-Analysis.ipynb
+│   └── README.md
 │
-├── notebooks/
-│   ├── eda_analysis.ipynb
-│   └── trend_analysis.ipynb
+├── Ticket Escalation Summary/         # Escalation, SLA & CSAT deep-dive analysis notebook
+│   ├── Escalation_SLA_CSAT_Analysis.ipynb
+│   └── README.md
 │
-├── powerbi/
-│   └── dashboard.pbix
-│
-└── README.md
+├── docs/                              # Supporting documentation
+├── LICENSE
+└── README.md                          ← You are here
 ```
 
 ---
 
-### 🎯 What This Project Demonstrates
+## 🗃️ Database Schema
 
-- Strong SQL fundamentals beyond basic queries
-- Ability to translate business problems into analysis
-- Understanding of operational KPIs (SLA, CSAT, escalations)
-- Data cleaning and validation in real-world scenarios
-- Structured, end-to-end analytics thinking
+The project uses a **SQLite database** (`opsSLA.db`) with the following relational tables:
 
---- 
-
-### 📌 Future Enhancements
-
-- Predict SLA breaches using machine learning
-- Real-time dashboard integration
-- Agent-level performance scoring model
-- Customer churn prediction based on support experience
+| Table | Rows | Description |
+|---|---|---|
+| `tickets` | 1,200 | Core ticket data — category, agent, customer, CSAT, payment type, country |
+| `sla_logs` | 1,200 | SLA target vs actual resolution time, breach flag & reason |
+| `agents` | 100 | Agent tier (L1/L2/L3), region (EMEA/APAC), experience (months) |
+| `customers` | 500 | Customer segment (Standard/Metal/Premium), tenure, risk flag |
+| `escalation_reasons` | 15 | Reason categories: Chargeback, Insurance, RevPoints, Plan Benefits, etc. |
+| `tickets_esc_summary` | 1,200 | Enriched master view joining all tables with engineered features |
 
 ---
 
-### ⭐ Final Note
+## 🔑 Key Features Engineered
 
-This project reflects a realistic business analytics workflow, combining:
+- `resolution_time_hours` — resolution time converted from minutes to hours
+- `sla_risk_flag` — boolean flag for SLA at-risk tickets
+- `resolution_speed` — categorical: Fast / Moderate / Slow
+- `severity_score` — composite score from escalation + SLA breach + repeat contact
+- `created_date`, `created_week`, `created_month`, `created_hour`, `created_dow` — temporal breakdown features
 
-- Data engineering
-- SQL analysis
-- Statistical reasoning
-- Business storytelling
-  
+---
+
+## 📁 Analysis Modules
+
+### 1. [Exploratory Data Analysis](./Exploratory%20Data%20Analysis/)
+Data quality auditing, temporal trend analysis, statistical validation of escalation & SLA patterns across time, agents, regions, and customer segments.
+
+### 2. [Ticket Escalation, SLA & CSAT Analysis](./Ticket%20Escalation%20Summary/)
+Deep-dive analysis into escalation drivers, SLA breach root causes, CSAT distribution, agent performance benchmarking, and repeat contact behaviour.
+
+---
+
+## 🛠️ Tech Stack
+
+| Tool | Purpose |
+|---|---|
+| **Python 3** | Core analysis language |
+| **SQLite + `sqlite3`** | Relational data storage and SQL querying |
+| **Pandas** | Data wrangling and feature engineering |
+| **NumPy** | Numerical operations |
+| **Matplotlib + Seaborn** | Data visualisation |
+| **SciPy** | Statistical testing (Spearman correlation, t-tests) |
+| **Jupyter Notebook** | Interactive analysis environment |
+
+---
+
+## 📌 Key Business Insights
+
+- 📈 **SLA breach rate** ranged between **33–54%**, with a declining trend over the analysis period — suggesting process stabilisation over time
+- 🔁 **Escalation rates are independent of ticket volume** — Spearman correlation = -0.03, p = 0.81 (not significant), meaning escalation is driven by ticket *complexity*, not volume
+- ⏰ **Peak ticket creation** occurs between **9 AM – 2 PM**, highlighting the need for staffing alignment to business hours
+- 🧑‍💼 **Agent tier and experience** significantly impact resolution speed and CSAT scores
+- 🗺️ **Regional disparities** exist between EMEA and APAC agents in escalation and SLA metrics
+- 💳 **Payment type** (WALLET / CARD / BANK_TRANSFER) and **issue category** (Cards, Payments, Compliance, Credit) are strong escalation predictors
+
+---
+
+## ⚡ Process Recommendations
+
+1. Increase L2 staffing during **historically high-volume weekdays**
+2. Introduce **proactive escalation monitoring** during mid-week peaks
+3. Adjust **weekend staffing** to reduce SLA breach risk
+4. Use **rolling weekly escalation rate** as an early-warning KPI
+5. Align support staffing to **9 AM – 2 PM peak window** for optimal SLA performance
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/deegpt/Operational-escalation-SLA-CSAT-Analysis.git
+cd Operational-escalation-SLA-CSAT-Analysis
+
+# 2. Install dependencies
+pip install pandas numpy matplotlib seaborn scipy jupyter
+
+# 3. Launch notebooks
+jupyter notebook
+```
+
+> **Note:** The SQLite database `opsSLA.db` must be present in the working directory when running the notebooks.
+
+---
+
+## 👤 Author
+
+**Deepak Gupta** · Data Analyst Enthusiast | Python · SQL · Tableau · Power BI
+
+[![GitHub](https://img.shields.io/badge/GitHub-deegpt-black?logo=github)](https://github.com/deegpt)
+[![Portfolio](https://img.shields.io/badge/Portfolio-deegpt.github.io-blue)](https://deegpt.github.io/deegpt2.github.io/)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE).
