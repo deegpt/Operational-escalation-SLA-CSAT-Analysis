@@ -1,11 +1,38 @@
 ﻿
--- ============================================================
+-- ==================================================================================================================
 -- Q1: Agent Ranking by Escalation Rate Within Tier
 -- Week-over-Week 
 -- "Which agents within each tier consistently escalate the most, and how does their rank change week-over-week?" | 
--- Uses: tickets JOIN agents
--- ============================================================
+-- ==================================================================================================================
 
+### Query Architecture - 
+    
+tickets (escalation_flag, created_at, agent_id)
+    │
+    INNER JOIN agents (agent_id, agent_tier, region)
+    │
+    ▼
+CTE 1: weekly_agent_stats
+    → GROUP BY agent + ISO week
+    → COUNT tickets, SUM escalations
+
+CTE 2: agent_weekly_ranked
+    → ROUND(escalations/tickets) = esc_rate_pct
+    → RANK() PARTITION BY tier+week  = esc_rank_in_tier
+    → SUM() ROWS BETWEEN ...        = cumulative_tickets
+
+CTE 3: agent_rank_movement
+    → LAG(esc_rank_in_tier)         = prev_week_rank
+    → rank diff                     = rank_change_wow
+    → CASE label                    = rank_trend
+
+FINAL SELECT
+    → ORDER BY tier → week → rank
+    → Optional WHERE rank <= 3
+
+
+
+    
 -- STEP 1: Aggregate weekly ticket & escalation counts per agent
 --         JOIN brings in agent_tier from the agents table
 
