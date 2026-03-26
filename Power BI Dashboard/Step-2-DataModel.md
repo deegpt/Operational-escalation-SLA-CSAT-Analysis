@@ -48,24 +48,37 @@ Go to **Home → New Table** and paste this DAX:
 
 ```dax
 DateTable =
-CALENDARFUND(
+CALENDAR(
     MIN(tickets[created_date]),
     MAX(tickets[created_date])
 )
 ```
 
-Then add calculated columns to the DateTable:
+> **Note:** `CALENDAR(start_date, end_date)` generates one row per date between the two dates.
+> `tickets[created_date]` must be a **Date** type column (created in Step 1 Power Query).
+> If you skipped that step, use `DATEVALUE(MIN(tickets[created_at]))` instead.
+
+Then add these as **calculated columns** to the DateTable (right-click DateTable → New Column):
 
 ```dax
--- Add to DateTable as calculated columns (New Column)
-Week Number  = WEEKNUM(DateTable[Date], 2)
-ISO Week     = "W" & FORMAT(WEEKNUM(DateTable[Date],2), "00")
-Day of Week  = FORMAT(DateTable[Date], "dddd")
-Month Name   = FORMAT(DateTable[Date], "MMMM YYYY")
-Day Number   = WEEKDAY(DateTable[Date], 2)
+Week Number = WEEKNUM(DateTable[Date], 2)
+```
+```dax
+ISO Week = "W" & FORMAT(WEEKNUM(DateTable[Date], 2), "00")
+```
+```dax
+Day of Week = FORMAT(DateTable[Date], "dddd")
+```
+```dax
+Month Name = FORMAT(DateTable[Date], "MMMM YYYY")
+```
+```dax
+Day Number = WEEKDAY(DateTable[Date], 2)
 ```
 
-Then relate:
+> **Tip:** Add each column one at a time — Power BI does not support multiple column definitions in one expression.
+
+Then relate DateTable to tickets:
 
 | From | Column | To | Column | Cardinality |
 |---|---|---|---|---|
@@ -75,20 +88,32 @@ Then relate:
 
 ## Mark as Date Table
 
-1. Click the `DateTable` in Model view
+1. Click `DateTable` in Model view
 2. Right-click → **Mark as date table**
 3. Select the `Date` column
 
-This enables Power BI's time intelligence functions (WoW, MoM, rolling averages).
+This enables Power BI’s time intelligence functions like `DATESINPERIOD`, `SAMEPERIODLASTYEAR`, and rolling averages used in the WoW DAX measures in Step 3.
+
+---
+
+## Common Errors & Fixes
+
+| Error | Cause | Fix |
+|---|---|---|
+| `CALENDARFUND is not a valid function` | Typo | Use `CALENDAR()` |
+| `Cannot find column tickets[created_date]` | Column not created in Power Query | Add it in Step 1 Power Query M code |
+| Relationship shows as dashed line | Duplicate values in a "one" side column | Check `agents[agent_id]` and `customers[customer_id]` for duplicates |
+| `DateTable` won't mark as date table | Date column has blanks or non-date values | Filter out nulls in Power Query before loading |
 
 ---
 
 ## Verification Checklist
 
-- [ ] 5 relationships created, all showing as solid lines (not dashed)
+- [ ] 5 relationships created, all showing as **solid lines** (not dashed)
 - [ ] No ambiguous relationship warnings in Model view
-- [ ] `DateTable` marked as date table
-- [ ] Relationship between `tickets` and `sla_logs` is **1:1** (not 1:many)
+- [ ] `DateTable` marked as date table (calendar icon appears on it)
+- [ ] Relationship between `tickets` and `sla_logs` is **1:1**
+- [ ] `DateTable[ISO Week]` shows values like `W36`, `W37`, `W38`
 
 ---
 
