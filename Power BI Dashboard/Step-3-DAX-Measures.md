@@ -137,7 +137,7 @@ RETURN
 
 ---
 
-## Section 6 — Week-over-Week (WoW) Measures
+## Section 6 — Week-over-Week (WoW) Measures ✅ Fixed
 
 > Requires the `DateTable` from Step 2.
 
@@ -148,14 +148,22 @@ CALCULATE(
     DATESINPERIOD(DateTable[Date], LASTDATE(DateTable[Date]), -7, DAY)
 )
 ```
+
 ```dax
+-- ✅ FIXED: Use DATESBETWEEN with explicit VAR dates instead of NOT DATESINPERIOD
+-- DAX does not support NOT wrapping a table function like DATESINPERIOD inside CALCULATE.
+-- Solution: compute the last-week window as an explicit date range using DATESBETWEEN.
 SLA Breach Rate (Last Week) =
-CALCULATE(
-    [SLA Breach Rate %],
-    DATESINPERIOD(DateTable[Date], LASTDATE(DateTable[Date]), -14, DAY),
-    NOT DATESINPERIOD(DateTable[Date], LASTDATE(DateTable[Date]), -7, DAY)
-)
+VAR LastDate     = LASTDATE(DateTable[Date])
+VAR WeekStart    = LastDate - 14   -- 14 days back = start of last week window
+VAR WeekEnd      = LastDate - 8    -- 8 days back  = end of last week window
+RETURN
+    CALCULATE(
+        [SLA Breach Rate %],
+        DATESBETWEEN(DateTable[Date], WeekStart, WeekEnd)
+    )
 ```
+
 ```dax
 SLA Breach WoW Change =
 [SLA Breach Rate (This Week)] - [SLA Breach Rate (Last Week)]
@@ -197,7 +205,6 @@ CALCULATE(
     sla_logs[sla_breached_flag]  = 1
 )
 ```
-
 ```dax
 Critical Ticket Rate % =
 DIVIDE(
@@ -211,11 +218,6 @@ DIVIDE(
     0
 )
 ```
-
-> **Why inline the filter instead of referencing `[Critical Tickets (Sev 3)]`?**
-> If the parent measure ever has an error, any measure referencing it inherits that error.
-> By inlining the CALCULATE filter directly, `Critical Ticket Rate %` is fully self-contained
-> and resolves independently — no error chain.
 
 ---
 
@@ -247,8 +249,9 @@ DIVIDE([High Risk + SLA Breach], [High Risk Tickets], 0)
 
 | Error | Root cause | Fix |
 |---|---|---|
+| `True/False expression does not specify a column` | `NOT` cannot wrap a table function like `DATESINPERIOD` in CALCULATE | Use `DATESBETWEEN` with explicit `VAR` date variables instead |
 | `Column 'severity_score' cannot be found` | Column only exists in the Python-enriched table, not raw CSV | Use the Section 7 fixed measures above |
-| `This expression refers to a Measure that has an error` | A measure depends on another broken measure | Fix the dependency first; or inline the logic to remove the dependency |
+| `This expression refers to a Measure that has an error` | A measure depends on another broken measure | Fix the root dependency first; or inline the logic |
 | `Cannot find column tickets[created_date]` | Power Query Step 1 column not added | Add `created_date` in Power Query or use `DATEVALUE(tickets[created_at])` |
 | `A circular dependency was detected` | Measure references itself indirectly | Rewrite using `VAR` to break the cycle |
 | `DATESINPERIOD requires a date column` | DateTable not marked as date table | Right-click DateTable → Mark as date table |
@@ -263,7 +266,8 @@ DIVIDE([High Risk + SLA Breach], [High Risk Tickets], 0)
 - [ ] `SLA Breach Rate %` returns ~0.33–0.54 depending on date filter
 - [ ] `Avg CSAT` returns approximately 3.1–3.2
 - [ ] `Agent Health Score` returns a value between 0–100 per agent
-- [ ] `Critical Ticket Rate %` returns a value without any error ✅
+- [ ] `Critical Ticket Rate %` returns without error ✅
+- [ ] `SLA Breach Rate (Last Week)` returns without error ✅
 
 ---
 
