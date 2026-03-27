@@ -14,19 +14,18 @@ This keeps all your measures in one organised place.
 ## Section 1 — Core Volume Measures
 
 ```dax
--- Total number of tickets
 Total Tickets =
 COUNTROWS(tickets)
-
--- Total escalated tickets
+```
+```dax
 Total Escalations =
 SUM(tickets[escalation_flag])
-
--- Total SLA breaches
+```
+```dax
 Total SLA Breaches =
 SUM(sla_logs[sla_breached_flag])
-
--- Total repeat contacts
+```
+```dax
 Total Repeat Contacts =
 SUM(tickets[repeat_contact_flag])
 ```
@@ -36,24 +35,22 @@ SUM(tickets[repeat_contact_flag])
 ## Section 2 — Rate Measures
 
 ```dax
--- Escalation Rate %
 Escalation Rate % =
 DIVIDE([Total Escalations], [Total Tickets], 0)
-
--- SLA Breach Rate %
+```
+```dax
 SLA Breach Rate % =
 DIVIDE([Total SLA Breaches], [Total Tickets], 0)
-
--- First Contact Resolution Rate %
--- FCR = tickets that did NOT need a repeat contact
+```
+```dax
 FCR Rate % =
 DIVIDE(
     COUNTROWS(FILTER(tickets, tickets[repeat_contact_flag] = 0)),
     [Total Tickets],
     0
 )
-
--- Repeat Contact Rate %
+```
+```dax
 Repeat Contact Rate % =
 DIVIDE([Total Repeat Contacts], [Total Tickets], 0)
 ```
@@ -63,39 +60,38 @@ DIVIDE([Total Repeat Contacts], [Total Tickets], 0)
 ## Section 3 — CSAT Measures
 
 ```dax
--- Average CSAT score
 Avg CSAT =
 AVERAGE(tickets[csat_score])
-
--- Average CSAT for escalated tickets only
+```
+```dax
 Avg CSAT (Escalated) =
 CALCULATE(
     AVERAGE(tickets[csat_score]),
     tickets[escalation_flag] = 1
 )
-
--- Average CSAT for non-escalated tickets
+```
+```dax
 Avg CSAT (Not Escalated) =
 CALCULATE(
     AVERAGE(tickets[csat_score]),
     tickets[escalation_flag] = 0
 )
-
--- Average CSAT for SLA-breached tickets
+```
+```dax
 Avg CSAT (SLA Breached) =
 CALCULATE(
     AVERAGE(tickets[csat_score]),
     sla_logs[sla_breached_flag] = 1
 )
-
--- Average CSAT for SLA-compliant tickets
+```
+```dax
 Avg CSAT (SLA Compliant) =
 CALCULATE(
     AVERAGE(tickets[csat_score]),
     sla_logs[sla_breached_flag] = 0
 )
-
--- CSAT difference: SLA breach impact
+```
+```dax
 CSAT Impact of SLA Breach =
 [Avg CSAT (SLA Compliant)] - [Avg CSAT (SLA Breached)]
 ```
@@ -105,15 +101,14 @@ CSAT Impact of SLA Breach =
 ## Section 4 — Resolution Time Measures
 
 ```dax
--- Average resolution time in minutes
 Avg Resolution (mins) =
 AVERAGE(tickets[resolution_time_mins])
-
--- Average resolution time in hours
+```
+```dax
 Avg Resolution (hrs) =
 DIVIDE([Avg Resolution (mins)], 60)
-
--- Average resolution time for escalated tickets
+```
+```dax
 Avg Resolution (mins, Escalated) =
 CALCULATE(
     AVERAGE(tickets[resolution_time_mins]),
@@ -125,16 +120,13 @@ CALCULATE(
 
 ## Section 5 — Agent Health Score
 
-This replicates the composite score from `vw_agent_performance_scorecard`:
-```
-Health Score = (Avg CSAT / 5) × 40  +  (1 − Esc Rate) × 30  +  (1 − SLA Breach Rate) × 30
-```
+`Health Score = (Avg CSAT / 5) × 40 + (1 − Esc Rate) × 30 + (1 − SLA Breach Rate) × 30`
 
 ```dax
 Agent Health Score =
-VAR AvgCSAT      = AVERAGE(tickets[csat_score])
-VAR EscRate      = DIVIDE(SUM(tickets[escalation_flag]), COUNTROWS(tickets), 0)
-VAR BreachRate   = DIVIDE(SUM(sla_logs[sla_breached_flag]), COUNTROWS(tickets), 0)
+VAR AvgCSAT    = AVERAGE(tickets[csat_score])
+VAR EscRate    = DIVIDE(SUM(tickets[escalation_flag]), COUNTROWS(tickets), 0)
+VAR BreachRate = DIVIDE(SUM(sla_logs[sla_breached_flag]), COUNTROWS(tickets), 0)
 RETURN
     ROUND(
         (AvgCSAT / 5) * 40
@@ -147,40 +139,39 @@ RETURN
 
 ## Section 6 — Week-over-Week (WoW) Measures
 
-> These require the `DateTable` from Step 2.
+> Requires the `DateTable` from Step 2.
 
 ```dax
--- SLA Breach Rate this week
 SLA Breach Rate (This Week) =
 CALCULATE(
     [SLA Breach Rate %],
     DATESINPERIOD(DateTable[Date], LASTDATE(DateTable[Date]), -7, DAY)
 )
-
--- SLA Breach Rate last week
+```
+```dax
 SLA Breach Rate (Last Week) =
 CALCULATE(
     [SLA Breach Rate %],
     DATESINPERIOD(DateTable[Date], LASTDATE(DateTable[Date]), -14, DAY),
     NOT DATESINPERIOD(DateTable[Date], LASTDATE(DateTable[Date]), -7, DAY)
 )
-
--- WoW change in SLA Breach Rate
+```
+```dax
 SLA Breach WoW Change =
 [SLA Breach Rate (This Week)] - [SLA Breach Rate (Last Week)]
-
--- WoW change direction label
+```
+```dax
 SLA Breach WoW Label =
 VAR Change = [SLA Breach WoW Change]
 RETURN
     SWITCH(
         TRUE(),
-        Change < 0,  "▼ Improved by " & FORMAT(ABS(Change), "0.0%"),
-        Change > 0,  "▲ Worsened by " & FORMAT(Change, "0.0%"),
+        Change < 0, "▼ Improved by " & FORMAT(ABS(Change), "0.0%"),
+        Change > 0, "▲ Worsened by " & FORMAT(Change, "0.0%"),
         "→ No change"
     )
-
--- 4-week rolling average SLA breach rate
+```
+```dax
 SLA Breach Rate (4Wk Rolling) =
 CALCULATE(
     [SLA Breach Rate %],
@@ -190,55 +181,89 @@ CALCULATE(
 
 ---
 
-## Section 7 — Severity Score Measures
+## Section 7 — Severity Score Measures ✅ Fixed
+
+> `severity_score` is a **derived column computed in Python**
+> (`escalation_flag + sla_breached_flag + repeat_contact_flag`).
+> It does **not exist** in the raw CSV files.
+> These measures reproduce the exact same logic using the 3 individual flag columns.
 
 ```dax
--- Count of severity score = 3 (all three failure flags)
 Critical Tickets (Sev 3) =
 CALCULATE(
     COUNTROWS(tickets),
-    tickets[severity_score] = 3
+    tickets[escalation_flag]     = 1,
+    tickets[repeat_contact_flag] = 1,
+    sla_logs[sla_breached_flag]  = 1
 )
-
--- % of tickets that are severity 3
-Critical Ticket Rate % =
-DIVIDE([Critical Tickets (Sev 3)], [Total Tickets], 0)
 ```
+
+```dax
+Critical Ticket Rate % =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS(tickets),
+        tickets[escalation_flag]     = 1,
+        tickets[repeat_contact_flag] = 1,
+        sla_logs[sla_breached_flag]  = 1
+    ),
+    [Total Tickets],
+    0
+)
+```
+
+> **Why inline the filter instead of referencing `[Critical Tickets (Sev 3)]`?**
+> If the parent measure ever has an error, any measure referencing it inherits that error.
+> By inlining the CALCULATE filter directly, `Critical Ticket Rate %` is fully self-contained
+> and resolves independently — no error chain.
 
 ---
 
 ## Section 8 — High-Risk Customer Measures
 
 ```dax
--- Tickets from high-risk customers (risk_flag = 1)
 High Risk Tickets =
 CALCULATE(
     COUNTROWS(tickets),
     customers[risk_flag] = 1
 )
-
--- High-risk tickets that also breached SLA
+```
+```dax
 High Risk + SLA Breach =
 CALCULATE(
     COUNTROWS(tickets),
-    customers[risk_flag] = 1,
+    customers[risk_flag]        = 1,
     sla_logs[sla_breached_flag] = 1
 )
-
--- % of high-risk tickets that breached SLA
+```
+```dax
 High Risk SLA Breach Rate % =
 DIVIDE([High Risk + SLA Breach], [High Risk Tickets], 0)
 ```
 
 ---
 
+## Common DAX Errors & Fixes
+
+| Error | Root cause | Fix |
+|---|---|---|
+| `Column 'severity_score' cannot be found` | Column only exists in the Python-enriched table, not raw CSV | Use the Section 7 fixed measures above |
+| `This expression refers to a Measure that has an error` | A measure depends on another broken measure | Fix the dependency first; or inline the logic to remove the dependency |
+| `Cannot find column tickets[created_date]` | Power Query Step 1 column not added | Add `created_date` in Power Query or use `DATEVALUE(tickets[created_at])` |
+| `A circular dependency was detected` | Measure references itself indirectly | Rewrite using `VAR` to break the cycle |
+| `DATESINPERIOD requires a date column` | DateTable not marked as date table | Right-click DateTable → Mark as date table |
+| `sla_logs column cannot be determined` | Relationship between tickets and sla_logs inactive | Check Model view — ensure 1:1 solid line relationship exists |
+
+---
+
 ## Verification Checklist
 
-- [ ] All measures visible under `_Measures` table in Data pane
-- [ ] `Escalation Rate %` returns ~0.25–0.28 (25–28%) for full dataset
+- [ ] All measures visible under `_Measures` table in the Data pane
+- [ ] `Escalation Rate %` returns ~0.25–0.28 for full dataset
 - [ ] `SLA Breach Rate %` returns ~0.33–0.54 depending on date filter
 - [ ] `Avg CSAT` returns approximately 3.1–3.2
 - [ ] `Agent Health Score` returns a value between 0–100 per agent
+- [ ] `Critical Ticket Rate %` returns a value without any error ✅
 
 ---
 
