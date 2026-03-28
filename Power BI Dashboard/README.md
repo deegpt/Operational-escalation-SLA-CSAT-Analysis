@@ -17,32 +17,32 @@
 | 4 | CSAT & Agent Scorecard | CSAT distribution, agent health score matrix |
 | 5 | High-Risk Triage | Daily churn-risk ticket table |
 
+---
 
 ### Executive Overview
-![Executive Overview](docs/executive_overview.png)
+![Executive Overview](../docs/executive_overview.png)
 
 ### Escalation Deep Dive
-![Escalation Deep Dive](docs/escalation_deep_dive.png)
+![Escalation Deep Dive](../docs/escalation_deep_dive.png)
 
 ### SLA Compliance
-![SLA Compliance](docs/sla_compliance.png)
+![SLA Compliance](../docs/sla_compliance.png)
 
 ### CSAT & Agent Scorecard
-![Agent Scorecard](docs/csat_agent_scorecard.png)
+![Agent Scorecard](../docs/csat_agent_scorecard.png)
 
 ### High-Risk Triage
-![High-Risk Triage](docs/triage_risk.png)
-
+![High-Risk Triage](../docs/high_risk_triage.png)
 
 ---
 
 ## Build Order
 
 ```
-Step 1 → Connect data (Power Query M)          PowerQuery_Connection.md
-Step 2 → Build data model (relationships)      DataModel.md
-Step 3 → Write all DAX measures                DAX_Measures.md
-Step 4 → Build each dashboard page            Dashboard_Layout.md
+Step 1 → Connect data (Power Query M)          Step-1-PowerQuery-Connection.md
+Step 2 → Build data model (relationships)      Step-2-DataModel.md
+Step 3 → Write all DAX measures                Step-3-DAX-Measures.md
+Step 4 → Build each dashboard page            Step-4-Dashboard-Layout.md
 ```
 
 ---
@@ -51,7 +51,7 @@ Step 4 → Build each dashboard page            Dashboard_Layout.md
 
 | File | What it contains |
 |---|---|
-| `PowerQuery_Connection.md` | M code to load all 5 CSVs or SQLite into Power BI |
-| `DataModel.md` | Star schema, relationship settings, filter directions |
-| `DAX_Measures.md` | Every DAX measure — paste directly into Power BI |
-| `Dashboard_Layout.md` | Page-by-page visual specs, fields, colours, slicers |
+| `Step-1-PowerQuery-Connection.md` | M code to load all 5 CSVs + recreate all date feature columns |
+| `Step-2-DataModel.md` | Star schema, relationship settings, filter directions |
+| `Step-3-DAX-Measures.md` | Every DAX measure — paste directly into Power BI |
+| `Step-4-Dashboard-Layout.md` | Page-by-page visual specs, fields, colours, slicers |
