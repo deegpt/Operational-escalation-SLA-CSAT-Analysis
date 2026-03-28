@@ -20,19 +20,19 @@
 ---
 
 ### Executive Overview
-![Executive Overview](../docs/executive_overview.png)
+![Executive Overview](https://raw.githubusercontent.com/deegpt/Operational-escalation-SLA-CSAT-Analysis/main/docs/executive_overview.png)
 
 ### Escalation Deep Dive
-![Escalation Deep Dive](../docs/escalation_deep_dive.png)
+![Escalation Deep Dive](https://raw.githubusercontent.com/deegpt/Operational-escalation-SLA-CSAT-Analysis/main/docs/escalation_deep_dive.png)
 
 ### SLA Compliance
-![SLA Compliance](../docs/sla_compliance.png)
+![SLA Compliance](https://raw.githubusercontent.com/deegpt/Operational-escalation-SLA-CSAT-Analysis/main/docs/sla_compliance.png)
 
 ### CSAT & Agent Scorecard
-![Agent Scorecard](../docs/csat_agent_scorecard.png)
+![Agent Scorecard](https://raw.githubusercontent.com/deegpt/Operational-escalation-SLA-CSAT-Analysis/main/docs/csat_agent_scorecard.png)
 
 ### High-Risk Triage
-![High-Risk Triage](../docs/high_risk_triage.png)
+![High-Risk Triage](https://raw.githubusercontent.com/deegpt/Operational-escalation-SLA-CSAT-Analysis/main/docs/high_risk_triage.png)
 
 ---
 
