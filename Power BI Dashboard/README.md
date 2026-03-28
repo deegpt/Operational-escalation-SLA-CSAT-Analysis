@@ -17,6 +17,7 @@
 | 4 | CSAT & Agent Scorecard | CSAT distribution, agent health score matrix |
 | 5 | High-Risk Triage | Daily churn-risk ticket table |
 
+
 ### Executive Overview
 ![Executive Overview](docs/executive_overview.png)
 
@@ -31,6 +32,7 @@
 
 ### High-Risk Triage
 ![High-Risk Triage](docs/triage_risk.png)
+
 
 ---
 
